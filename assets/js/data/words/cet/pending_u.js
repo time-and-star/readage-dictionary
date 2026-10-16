@@ -1,0 +1,80 @@
+/* assets/js/data/words/cet/pending_u.js
+ * 自动生成（tools/import_cet.js），源：《全国大学英语四、六级考试大纲（2016年修订版）》词表。
+ * 这里只有词形、考级标签与大纲标注的拼写变体 —— 释义 / 例句 / 辨析必须逐个手敲，
+ * 手敲词条放在 author_u.js，装配时自动覆盖本文件的占位条目。
+ */
+(function (global) {
+  'use strict';
+  const RA = (global.RA = global.RA || {});
+  RA.pendingWords = RA.pendingWords || {};
+  const P = (lemma, level, variants, phrase) => {
+    RA.pendingWords[lemma] = { id: lemma, lemma: lemma, level: level, variants: variants || [], phrase: !!phrase };
+  };
+  P('ugly', 'CET4');
+  P('ultimate', 'CET4');
+  P('ultra', 'CET6');
+  P('umbrella', 'CET4');
+  P('unanimous', 'CET6');
+  P('uncertain', 'CET4');
+  P('uncle', 'CET4');
+  P('uncover', 'CET4');
+  P('under', 'CET4');
+  P('underdeveloped', 'CET4');
+  P('underestimate', 'CET4');
+  P('undergo', 'CET4');
+  P('undergraduate', 'CET4');
+  P('underground', 'CET4');
+  P('underlie', 'CET6');
+  P('underline', 'CET4');
+  P('undermine', 'CET4');
+  P('underneath', 'CET4');
+  P('understand', 'CET4');
+  P('undertake', 'CET4');
+  P('underwear', 'CET4');
+  P('undo', 'CET4');
+  P('undoubtedly', 'CET4');
+  P('uneasy', 'CET4');
+  P('unemployed', 'CET4');
+  P('unfold', 'CET6');
+  P('uniform', 'CET4');
+  P('unify', 'CET6');
+  P('unilateral', 'CET6');
+  P('union', 'CET4');
+  P('unique', 'CET4');
+  P('unit', 'CET4');
+  P('unite', 'CET4');
+  P('universe', 'CET4');
+  P('university', 'CET4');
+  P('unleash', 'CET6');
+  P('unless', 'CET4');
+  P('unprecedented', 'CET6');
+  P('until', 'CET4');
+  P('unveil', 'CET6');
+  P('up', 'CET4');
+  P('up-to-date', 'CET4');
+  P('update', 'CET4');
+  P('upgrade', 'CET4');
+  P('uphold', 'CET6');
+  P('upload', 'CET4');
+  P('upon', 'CET4');
+  P('upper', 'CET4');
+  P('upright', 'CET4');
+  P('uprising', 'CET6');
+  P('upset', 'CET4');
+  P('upstairs', 'CET4');
+  P('upward', 'CET4');
+  P('uranium', 'CET4');
+  P('urban', 'CET4');
+  P('urge', 'CET4');
+  P('urgent', 'CET4');
+  P('urine', 'CET6');
+  P('us', 'CET4');
+  P('usage', 'CET4');
+  P('use', 'CET4');
+  P('used', 'CET4');
+  P('usual', 'CET4');
+  P('utility', 'CET4');
+  P('utilize', 'CET4', ['utilise']);
+  P('utmost', 'CET4');
+  P('utter', 'CET4');
+})(typeof window !== 'undefined' ? window : globalThis);

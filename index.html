@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>ReadAge · 词典</title>
+<meta name="description" content="ReadAge 词典：按义项呈现英英释义与中文翻译的英语学习型词典，支持形近音近辨析、搭配、测试与复习。">
+<meta name="theme-color" content="#42654e">
+<link rel="stylesheet" href="assets/css/base.css?v=20261008">
+<link rel="stylesheet" href="assets/css/entry.css?v=20261008">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到正文</a>
+<svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5v15M12 5C9 3 5 3 2 4v15c3-1 7-1 10 1 3-2 7-2 10-1V4c-3-1-7-1-10 1Z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7M5 9v11h5v-6h4v6h5V9"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4Z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="m14 5 5 5M4 20l1-5L16 4a2 2 0 0 1 3 0l1 1a2 2 0 0 1 0 3L9 19Z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M15 8V4H4v11h4"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="m11 4-5 4H3v8h3l5 4ZM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+</svg>
+<div class="app">
+  <header class="topbar">
+    <button id="menuBtn" class="menu-btn" aria-label="打开导航菜单" aria-controls="sideNav" aria-expanded="false"><svg class="ui-icon" aria-hidden="true"><use href="#i-menu"/></svg></button>
+    <div class="brand" id="brand" role="button" tabindex="0" aria-label="返回首页">
+      <div class="brand-mark"><svg class="ui-icon" aria-hidden="true"><use href="#i-book"/></svg></div>
+      <div class="brand-name">Read<span>Age</span><small class="brand-sub">ENGLISH DICTIONARY</small></div>
+    </div>
+    <div class="top-search">
+      <form id="searchForm" class="search-wrap" autocomplete="off">
+        <span class="search-icon" aria-hidden="true"><svg class="ui-icon"><use href="#i-search"/></svg></span>
+        <input id="searchInput" type="search" aria-label="输入英文单词查词" placeholder="搜索单词或词组" spellcheck="false" maxlength="90">
+        <button type="submit">查词</button>
+      </form>
+      <div class="search-drop" id="searchDrop" role="listbox" aria-label="查词建议"></div>
+    </div>
+    <div class="top-meta"><span class="status-dot" aria-hidden="true"></span>本地词库 · 离线可查</div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sideNav" aria-label="主导航">
+      <div class="side-section">学习空间</div>
+      <button type="button" data-view="home" class="nav-btn"><span class="nav-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-home"/></svg></span>发现词汇</button>
+      <button type="button" data-view="entry" class="nav-btn"><span class="nav-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-book"/></svg></span>词条详情</button>
+      <button type="button" data-view="library" class="nav-btn"><span class="nav-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-grid"/></svg></span>本地词库 <span class="nav-count" id="navLibraryCount"></span></button>
+      <button type="button" data-view="saved" class="nav-btn"><span class="nav-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-bookmark"/></svg></span>我的生词本 <span class="nav-count" id="navSavedCount"></span></button>
+      <button type="button" data-view="review" class="nav-btn"><span class="nav-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-clock"/></svg></span>错题复习</button>
+      <button type="button" data-view="quiz" class="nav-btn"><span class="nav-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-pen"/></svg></span>易混词练习</button>
+      <div class="side-card">
+        <strong>值得读一读</strong>
+        <button class="word-link" data-word="adapt">adapt <small>适应</small></button>
+        <button class="word-link" data-word="adopt">adopt <small>采用</small></button>
+        <button class="word-link" data-word="adept">adept <small>熟练的</small></button>
+        <button class="word-link" data-word="affect">affect <small>影响</small></button>
+        <button class="word-link" data-word="effect">effect <small>效果</small></button>
+      </div>
+      <div class="side-footer">ReadAge Dictionary<br>读懂词义，也读懂用法。</div>
+    </aside>
+
+    <main class="content" id="main" aria-live="polite" tabindex="-1"></main>
+    <aside class="rail" id="rail" aria-label="学习信息"></aside>
+  </div>
+</div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+<div id="toast" class="status" role="status" hidden></div>
+
+<!-- 核心层（无 DOM 依赖，可在 Node 中单测） -->
+<script src="assets/js/core/util.js"></script>
+<script src="assets/js/core/storage.js"></script>
+<script src="assets/js/core/model.js"></script>
+<script src="assets/js/core/relations.js"></script>
+<script src="assets/js/core/search.js"></script>
+<script src="assets/js/core/learn.js"></script>
+<script src="assets/js/core/audio.js"></script>
+<script src="assets/js/core/online.js"></script>
+<!-- 数据层 -->
+<script src="assets/js/data/words/adapt.js"></script>
+<script src="assets/js/data/words/curated.js"></script>
+<script src="assets/js/data/words/cet/pending_a.js"></script>
+<script src="assets/js/data/words/cet/pending_b.js"></script>
+<script src="assets/js/data/words/cet/pending_c.js"></script>
+<script src="assets/js/data/words/cet/pending_d.js"></script>
+<script src="assets/js/data/words/cet/pending_e.js"></script>
+<script src="assets/js/data/words/cet/pending_f.js"></script>
+<script src="assets/js/data/words/cet/pending_g.js"></script>
+<script src="assets/js/data/words/cet/pending_h.js"></script>
+<script src="assets/js/data/words/cet/pending_i.js"></script>
+<script src="assets/js/data/words/cet/pending_j.js"></script>
+<script src="assets/js/data/words/cet/pending_k.js"></script>
+<script src="assets/js/data/words/cet/pending_l.js"></script>
+<script src="assets/js/data/words/cet/pending_m.js"></script>
+<script src="assets/js/data/words/cet/pending_n.js"></script>
+<script src="assets/js/data/words/cet/pending_o.js"></script>
+<script src="assets/js/data/words/cet/pending_p.js"></script>
+<script src="assets/js/data/words/cet/pending_q.js"></script>
+<script src="assets/js/data/words/cet/pending_r.js"></script>
+<script src="assets/js/data/words/cet/pending_s.js"></script>
+<script src="assets/js/data/words/cet/pending_t.js"></script>
+<script src="assets/js/data/words/cet/pending_u.js"></script>
+<script src="assets/js/data/words/cet/pending_v.js"></script>
+<script src="assets/js/data/words/cet/pending_w.js"></script>
+<script src="assets/js/data/words/cet/pending_x.js"></script>
+<script src="assets/js/data/words/cet/pending_y.js"></script>
+<script src="assets/js/data/words/cet/pending_z.js"></script>
+<script src="assets/js/data/words/kty/pending_kty.js"></script>
+<script src="assets/js/data/words/cet/_cet_helper.js"></script>
+<script src="assets/js/data/words/cet/author_a1.js"></script>
+<script src="assets/js/data/words/cet/author_a10.js"></script>
+<script src="assets/js/data/words/cet/author_a11.js"></script>
+<script src="assets/js/data/words/cet/author_a12.js"></script>
+<script src="assets/js/data/words/cet/author_a13.js"></script>
+<script src="assets/js/data/words/cet/author_a14.js"></script>
+<script src="assets/js/data/words/cet/author_a2.js"></script>
+<script src="assets/js/data/words/cet/author_a3.js"></script>
+<script src="assets/js/data/words/cet/author_a4.js"></script>
+<script src="assets/js/data/words/cet/author_a5.js"></script>
+<script src="assets/js/data/words/cet/author_a6.js"></script>
+<script src="assets/js/data/words/cet/author_a7.js"></script>
+<script src="assets/js/data/words/cet/author_a8.js"></script>
+<script src="assets/js/data/words/cet/author_a9.js"></script>
+<script src="assets/js/data/words/cet/author_b1.js"></script>
+<script src="assets/js/data/words/cet/author_b2.js"></script>
+<script src="assets/js/data/words/cet/author_b3.js"></script>
+<script src="assets/js/data/words/cet/author_b4.js"></script>
+<script src="assets/js/data/words/cet/author_b5.js"></script>
+<script src="assets/js/data/words/cet/author_b6.js"></script>
+<script src="assets/js/data/words/cet/author_b7.js"></script>
+<script src="assets/js/data/words/cet/author_c1.js"></script>
+<script src="assets/js/data/words/cet/author_c10.js"></script>
+<script src="assets/js/data/words/cet/author_c11.js"></script>
+<script src="assets/js/data/words/cet/author_c12.js"></script>
+<script src="assets/js/data/words/cet/author_c13.js"></script>
+<script src="assets/js/data/words/cet/author_c2.js"></script>
+<script src="assets/js/data/words/cet/author_c3.js"></script>
+<script src="assets/js/data/words/cet/author_c4.js"></script>
+<script src="assets/js/data/words/cet/author_c5.js"></script>
+<script src="assets/js/data/words/cet/author_c6.js"></script>
+<script src="assets/js/data/words/cet/author_c7.js"></script>
+<script src="assets/js/data/words/cet/author_c8.js"></script>
+<script src="assets/js/data/words/cet/author_c9.js"></script>
+<script src="assets/js/data/words/cet/author_d1.js"></script>
+<script src="assets/js/data/words/cet/author_d2.js"></script>
+<script src="assets/js/data/words/cet/author_d3.js"></script>
+<script src="assets/js/data/words/cet/author_d4.js"></script>
+<script src="assets/js/data/words/cet/author_d5.js"></script>
+<script src="assets/js/data/words/cet/author_d6.js"></script>
+<script src="assets/js/data/words/cet/author_d7.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a1.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a10.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a11.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a12.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a13.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a14.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a15.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a16.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a17.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a18.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a19.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a2.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a20.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a21.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a22.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a23.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a24.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a25.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a26.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a27.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a28.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a29.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a3.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a30.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a31.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a32.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a33.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a34.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a35.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a36.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a37.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a4.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a5.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a6.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a7.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a8.js"></script>
+<script src="assets/js/data/words/cet/author_depth_a9.js"></script>
+<script src="assets/js/data/words/cet/author_depth_c1.js"></script>
+<script src="assets/js/data/words/cet/author_depth_c2.js"></script>
+<script src="assets/js/data/words/cet/author_depth_c3.js"></script>
+<script src="assets/js/data/words/cet/author_depth_d1.js"></script>
+<script src="assets/js/data/words/cet/author_depth_d2.js"></script>
+<script src="assets/js/data/words/cet/author_depth_d3.js"></script>
+<script src="assets/js/data/words/cet/author_depth_d4.js"></script>
+<script src="assets/js/data/words/cet/author_depth_d5.js"></script>
+<script src="assets/js/data/words/cet/author_depth_e1.js"></script>
+<script src="assets/js/data/words/cet/author_depth_e2.js"></script>
+<script src="assets/js/data/words/cet/author_depth_e3.js"></script>
+<script src="assets/js/data/words/cet/author_depth_e4.js"></script>
+<script src="assets/js/data/words/cet/author_depth_e5.js"></script>
+<script src="assets/js/data/words/cet/author_depth_f1.js"></script>
+<script src="assets/js/data/words/cet/author_depth_f2.js"></script>
+<script src="assets/js/data/words/cet/author_depth_f3.js"></script>
+<script src="assets/js/data/words/cet/author_depth_f4.js"></script>
+<script src="assets/js/data/words/cet/author_depth_f5.js"></script>
+<script src="assets/js/data/words/cet/author_depth_g1.js"></script>
+<script src="assets/js/data/words/cet/author_depth_g2.js"></script>
+<script src="assets/js/data/words/cet/author_depth_g3.js"></script>
+<script src="assets/js/data/words/cet/author_depth_g4.js"></script>
+<script src="assets/js/data/words/cet/author_depth_g5.js"></script>
+<script src="assets/js/data/words/cet/author_depth_h1.js"></script>
+<script src="assets/js/data/words/cet/author_depth_h2.js"></script>
+<script src="assets/js/data/words/cet/author_depth_h3.js"></script>
+<script src="assets/js/data/words/cet/author_depth_h4.js"></script>
+<script src="assets/js/data/words/cet/author_depth_h5.js"></script>
+<script src="assets/js/data/words/cet/author_depth_i1.js"></script>
+<script src="assets/js/data/words/cet/author_depth_i2.js"></script>
+<script src="assets/js/data/words/cet/author_depth_i3.js"></script>
+<script src="assets/js/data/words/cet/author_depth_i4.js"></script>
+<script src="assets/js/data/words/cet/author_depth_i5.js"></script>
+<script src="assets/js/data/words/cet/author_depth_j1.js"></script>
+<script src="assets/js/data/words/cet/author_depth_j2.js"></script>
+<script src="assets/js/data/words/cet/author_depth_j3.js"></script>
+<script src="assets/js/data/words/cet/author_depth_j4.js"></script>
+<script src="assets/js/data/words/cet/author_depth_j5.js"></script>
+<script src="assets/js/data/words/cet/author_depth_z38.js"></script>
+<script src="assets/js/data/words/cet/author_depth_z39.js"></script>
+<script src="assets/js/data/words/cet/author_depth_z40.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz100.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz101.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz102.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz103.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz104.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz105.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz106.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz107.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz108.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz109.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz110.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz111.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz112.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz113.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz114.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz115.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz116.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz117.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz118.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz119.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz120.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz121.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz122.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz123.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz124.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz125.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz126.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz127.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz128.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz129.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz130.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz131.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz132.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz133.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz134.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz135.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz136.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz137.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz138.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz139.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz140.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz141.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz142.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz143.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz144.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz145.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz146.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz147.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz148.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz149.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz150.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz151.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz152.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz153.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz154.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz155.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz156.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz157.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz158.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz159.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz160.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz161.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz162.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz163.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz164.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz165.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz166.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz167.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz168.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz169.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz170.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz171.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz41.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz42.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz43.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz44.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz45.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz46.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz47.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz48.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz49.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz50.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz51.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz52.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz53.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz54.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz55.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz56.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz57.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz58.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz59.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz60.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz61.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz62.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz63.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz64.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz65.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz66.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz67.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz68.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz69.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz70.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz71.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz72.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz73.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz74.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz75.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz76.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz77.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz78.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz79.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz80.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz81.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz82.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz83.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz84.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz85.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz86.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz87.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz88.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz89.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz90.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz91.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz92.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz93.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz94.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz95.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz96.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz97.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz98.js"></script>
+<script src="assets/js/data/words/cet/author_depth_zz99.js"></script>
+<script src="assets/js/data/words/cet/author_e1.js"></script>
+<script src="assets/js/data/words/cet/author_e2.js"></script>
+<script src="assets/js/data/words/cet/author_e3.js"></script>
+<script src="assets/js/data/words/cet/author_e4.js"></script>
+<script src="assets/js/data/words/cet/author_e5.js"></script>
+<script src="assets/js/data/words/cet/author_e6.js"></script>
+<script src="assets/js/data/words/cet/author_f1.js"></script>
+<script src="assets/js/data/words/cet/author_f2.js"></script>
+<script src="assets/js/data/words/cet/author_f3.js"></script>
+<script src="assets/js/data/words/cet/author_f4.js"></script>
+<script src="assets/js/data/words/cet/author_f5.js"></script>
+<script src="assets/js/data/words/cet/author_f6.js"></script>
+<script src="assets/js/data/words/cet/author_f7.js"></script>
+<script src="assets/js/data/words/cet/author_f8.js"></script>
+<script src="assets/js/data/words/cet/author_g1.js"></script>
+<script src="assets/js/data/words/cet/author_g2.js"></script>
+<script src="assets/js/data/words/cet/author_g3.js"></script>
+<script src="assets/js/data/words/cet/author_g4.js"></script>
+<script src="assets/js/data/words/cet/author_h1.js"></script>
+<script src="assets/js/data/words/cet/author_h2.js"></script>
+<script src="assets/js/data/words/cet/author_h3.js"></script>
+<script src="assets/js/data/words/cet/author_h4.js"></script>
+<script src="assets/js/data/words/cet/author_h5.js"></script>
+<script src="assets/js/data/words/cet/author_h6.js"></script>
+<script src="assets/js/data/words/cet/author_h7.js"></script>
+<script src="assets/js/data/words/cet/author_i1.js"></script>
+<script src="assets/js/data/words/cet/author_i2.js"></script>
+<script src="assets/js/data/words/cet/author_i3.js"></script>
+<script src="assets/js/data/words/cet/author_i4.js"></script>
+<script src="assets/js/data/words/cet/author_i5.js"></script>
+<script src="assets/js/data/words/cet/author_i6.js"></script>
+<script src="assets/js/data/words/cet/author_i7.js"></script>
+<script src="assets/js/data/words/cet/author_i8.js"></script>
+<script src="assets/js/data/words/cet/author_i9.js"></script>
+<script src="assets/js/data/words/cet/author_j1.js"></script>
+<script src="assets/js/data/words/cet/author_j2.js"></script>
+<script src="assets/js/data/words/cet/author_k1.js"></script>
+<script src="assets/js/data/words/cet/author_k2.js"></script>
+<script src="assets/js/data/words/cet/author_l1.js"></script>
+<script src="assets/js/data/words/cet/author_l2.js"></script>
+<script src="assets/js/data/words/cet/author_l3.js"></script>
+<script src="assets/js/data/words/cet/author_l4.js"></script>
+<script src="assets/js/data/words/cet/author_l5.js"></script>
+<script src="assets/js/data/words/cet/author_l6.js"></script>
+<script src="assets/js/data/words/cet/author_l7.js"></script>
+<script src="assets/js/data/words/cet/author_l8.js"></script>
+<script src="assets/js/data/words/cet/author_m1.js"></script>
+<script src="assets/js/data/words/cet/author_m10.js"></script>
+<script src="assets/js/data/words/cet/author_m2.js"></script>
+<script src="assets/js/data/words/cet/author_m3.js"></script>
+<script src="assets/js/data/words/cet/author_m4.js"></script>
+<script src="assets/js/data/words/cet/author_m5.js"></script>
+<script src="assets/js/data/words/cet/author_m6.js"></script>
+<script src="assets/js/data/words/cet/author_m7.js"></script>
+<script src="assets/js/data/words/cet/author_m8.js"></script>
+<script src="assets/js/data/words/cet/author_m9.js"></script>
+<script src="assets/js/data/words/cet/author_n1.js"></script>
+<script src="assets/js/data/words/cet/author_n2.js"></script>
+<script src="assets/js/data/words/cet/author_n3.js"></script>
+<script src="assets/js/data/words/cet/author_n4.js"></script>
+<script src="assets/js/data/words/cet/author_n5.js"></script>
+<script src="assets/js/data/words/cet/author_o1.js"></script>
+<script src="assets/js/data/words/cet/author_o2.js"></script>
+<script src="assets/js/data/words/cet/author_o3.js"></script>
+<script src="assets/js/data/words/cet/author_o4.js"></script>
+<script src="assets/js/data/words/cet/author_o5.js"></script>
+<script src="assets/js/data/words/cet/author_o6.js"></script>
+<script src="assets/js/data/words/cet/author_o7.js"></script>
+<script src="assets/js/data/words/cet/author_p1.js"></script>
+<script src="assets/js/data/words/cet/author_p10.js"></script>
+<script src="assets/js/data/words/cet/author_p11.js"></script>
+<script src="assets/js/data/words/cet/author_p12.js"></script>
+<script src="assets/js/data/words/cet/author_p13.js"></script>
+<script src="assets/js/data/words/cet/author_p14.js"></script>
+<script src="assets/js/data/words/cet/author_p2.js"></script>
+<script src="assets/js/data/words/cet/author_p3.js"></script>
+<script src="assets/js/data/words/cet/author_p4.js"></script>
+<script src="assets/js/data/words/cet/author_p5.js"></script>
+<script src="assets/js/data/words/cet/author_p6.js"></script>
+<script src="assets/js/data/words/cet/author_p7.js"></script>
+<script src="assets/js/data/words/cet/author_p8.js"></script>
+<script src="assets/js/data/words/cet/author_p9.js"></script>
+<script src="assets/js/data/words/cet/author_q1.js"></script>
+<script src="assets/js/data/words/cet/author_q2.js"></script>
+<script src="assets/js/data/words/cet/author_r1.js"></script>
+<script src="assets/js/data/words/cet/author_r10.js"></script>
+<script src="assets/js/data/words/cet/author_r11.js"></script>
+<script src="assets/js/data/words/cet/author_r2.js"></script>
+<script src="assets/js/data/words/cet/author_r3.js"></script>
+<script src="assets/js/data/words/cet/author_r4.js"></script>
+<script src="assets/js/data/words/cet/author_r5.js"></script>
+<script src="assets/js/data/words/cet/author_r6.js"></script>
+<script src="assets/js/data/words/cet/author_r7.js"></script>
+<script src="assets/js/data/words/cet/author_r8.js"></script>
+<script src="assets/js/data/words/cet/author_r9.js"></script>
+<script src="assets/js/data/words/cet/author_s1.js"></script>
+<script src="assets/js/data/words/cet/author_s10.js"></script>
+<script src="assets/js/data/words/cet/author_s11.js"></script>
+<script src="assets/js/data/words/cet/author_s12.js"></script>
+<script src="assets/js/data/words/cet/author_s13.js"></script>
+<script src="assets/js/data/words/cet/author_s14.js"></script>
+<script src="assets/js/data/words/cet/author_s15.js"></script>
+<script src="assets/js/data/words/cet/author_s16.js"></script>
+<script src="assets/js/data/words/cet/author_s17.js"></script>
+<script src="assets/js/data/words/cet/author_s18.js"></script>
+<script src="assets/js/data/words/cet/author_s19.js"></script>
+<script src="assets/js/data/words/cet/author_s2.js"></script>
+<script src="assets/js/data/words/cet/author_s20.js"></script>
+<script src="assets/js/data/words/cet/author_s21.js"></script>
+<script src="assets/js/data/words/cet/author_s22.js"></script>
+<script src="assets/js/data/words/cet/author_s23.js"></script>
+<script src="assets/js/data/words/cet/author_s24.js"></script>
+<script src="assets/js/data/words/cet/author_s25.js"></script>
+<script src="assets/js/data/words/cet/author_s3.js"></script>
+<script src="assets/js/data/words/cet/author_s4.js"></script>
+<script src="assets/js/data/words/cet/author_s5.js"></script>
+<script src="assets/js/data/words/cet/author_s6.js"></script>
+<script src="assets/js/data/words/cet/author_s7.js"></script>
+<script src="assets/js/data/words/cet/author_s8.js"></script>
+<script src="assets/js/data/words/cet/author_s9.js"></script>
+<script src="assets/js/data/words/cet/author_t1.js"></script>
+<script src="assets/js/data/words/cet/author_t2.js"></script>
+<script src="assets/js/data/words/cet/author_t3.js"></script>
+<script src="assets/js/data/words/cet/author_t4.js"></script>
+<script src="assets/js/data/words/cet/author_t5.js"></script>
+<script src="assets/js/data/words/cet/author_t6.js"></script>
+<script src="assets/js/data/words/cet/author_t7.js"></script>
+<script src="assets/js/data/words/cet/author_t8.js"></script>
+<script src="assets/js/data/words/cet/author_t9.js"></script>
+<script src="assets/js/data/words/cet/author_u1.js"></script>
+<script src="assets/js/data/words/cet/author_u2.js"></script>
+<script src="assets/js/data/words/cet/author_u3.js"></script>
+<script src="assets/js/data/words/cet/author_u4.js"></script>
+<script src="assets/js/data/words/cet/author_u5.js"></script>
+<script src="assets/js/data/words/cet/author_u6.js"></script>
+<script src="assets/js/data/words/cet/author_u7.js"></script>
+<script src="assets/js/data/words/cet/author_v1.js"></script>
+<script src="assets/js/data/words/cet/author_v2.js"></script>
+<script src="assets/js/data/words/cet/author_v3.js"></script>
+<script src="assets/js/data/words/cet/author_w1.js"></script>
+<script src="assets/js/data/words/cet/author_w10.js"></script>
+<script src="assets/js/data/words/cet/author_w2.js"></script>
+<script src="assets/js/data/words/cet/author_w5.js"></script>
+<script src="assets/js/data/words/cet/author_w7.js"></script>
+<script src="assets/js/data/words/cet/author_w8.js"></script>
+<script src="assets/js/data/words/cet/author_w9.js"></script>
+<script src="assets/js/data/words/cet/author_x1.js"></script>
+<script src="assets/js/data/words/cet/author_y1.js"></script>
+<script src="assets/js/data/words/cet/author_y2.js"></script>
+<script src="assets/js/data/words/cet/author_z1.js"></script>
+<script src="assets/js/data/words/cet/author_z2.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a1.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a10.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a11.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a12.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a13.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a14.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a15.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a16.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a17.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a18.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a19.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a2.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a20.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a21.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a22.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a23.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a24.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a25.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a26.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a27.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a28.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a29.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a3.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a30.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a31.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a32.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a33.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a34.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a35.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a36.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a37.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a38.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a39.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a4.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a40.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a41.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a42.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a43.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a44.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a45.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a46.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a47.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a48.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a49.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a5.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a50.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a51.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a52.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a53.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a54.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a55.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a56.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a57.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a58.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a59.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a6.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a60.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a61.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a62.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a63.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a64.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a65.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a66.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a67.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a68.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a69.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a7.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a70.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a71.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a72.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a73.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a8.js"></script>
+<script src="assets/js/data/words/kty/author_kty_a9.js"></script>
+<script src="assets/js/data/relations.js"></script>
+<script src="assets/js/data/registry.js"></script>
+<!-- 渲染层 -->
+<script src="assets/js/render/entry.js?v=20261008"></script>
+<script src="assets/js/render/views.js?v=20261008"></script>
+<script src="assets/js/render/quiz.js"></script>
+<!-- 应用装配 -->
+<script src="assets/js/app.js?v=20261008"></script>
+<script>
+document.getElementById('importFile').addEventListener('change', function (e) {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = function () {
+    try {
+      const backup = JSON.parse(String(reader.result));
+      const preview = RA.storage.previewImport(backup);
+      if (!preview.ok) { RA.notify(preview.errors.join('；')); return; }
+      const labels = {saved:'收藏',notes:'笔记',senseState:'词条掌握状态',errors:'错题',history:'历史',quizStats:'统计字段'};
+      const summary = Object.entries(preview.summary).map(([key,n]) => labels[key] + '：现有 ' + n.current + '，备份 ' + n.incoming).join('\n');
+      if (!window.confirm('将替换以下类别，未包含类别保持原值：\n' + summary + '\n确认恢复？')) return;
+      const ok = RA.learn.importData(backup);
+      RA.notify(ok ? '已导入备份数据' : '文件格式不正确，导入失败');
+      if (ok) RA.render();
+    } catch (err) {
+      RA.notify('文件解析失败：' + err.message);
+    }
+  };
+  reader.readAsText(f);
+  e.target.value = '';
+});
+</script>
+</body>
+</html>
+

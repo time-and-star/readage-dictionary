@@ -1,0 +1,290 @@
+/* ReadAge · 词条页「经典词典风格」排版层
+   设计原则：大词头 → 词性弱层级 → 英英释义突出 → 中文翻译配对 → 中文详解 → 例句 → 用法
+   不卡片化、不渐变、不夸张阴影，靠字号 / 字重 / 留白 / 细分隔线建立层级。 */
+
+.lex{max-width:860px;margin:0 auto}
+.lex-intro{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--muted);margin:0 0 4px}
+.lex-intro button{color:var(--muted)}
+.lex-intro button:hover{color:var(--accent)}
+.lex-intro .tag{margin-left:auto}
+
+/* ===== 00 词头条区 ===== */
+.lex-head{padding:19px 0 26px;margin-bottom:0}
+.lex-headword{font-family:var(--serif);font-size:clamp(48px,6vw,76px);font-weight:400;line-height:1.1;letter-spacing:-.035em;margin:0;overflow-wrap:anywhere}
+.lex-headword .hw-mark{color:var(--accent)}
+.lex-posline{margin-top:8px;font-family:var(--sans);font-size:13px;color:var(--muted);letter-spacing:.01em}
+.lex-posline .sep{color:var(--rule);margin:0 .5em}
+.lex-pron{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;margin-top:16px}
+.pron-item{display:flex;align-items:center;gap:8px}
+.pron-region{font-size:10px;letter-spacing:.08em;color:var(--muted);padding:1px 0}
+.pron-ipa{font-family:var(--serif);font-size:17px;color:var(--ink-soft)}
+.play-btn{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--accent-dark);background:var(--accent-soft);
+  border-radius:4px;padding:5px 8px;min-height:30px;border:1px solid transparent}
+.play-btn .ui-icon{width:14px;height:14px}
+.play-btn:hover{border-color:var(--accent)}
+.play-btn[disabled]{background:var(--bg-2);color:var(--faint);cursor:not-allowed}
+.audio-note{width:100%;font-size:10px;color:var(--muted);line-height:1.7}
+.lex-meta{margin-top:10px;font-size:11px;color:var(--muted)}
+.lex-meta summary{cursor:pointer;display:inline-flex;align-items:center;gap:8px;list-style:none}
+.lex-meta summary::-webkit-details-marker{display:none}
+.lex-meta summary::after{content:'+';font-size:13px}
+.lex-meta[open] summary::after{content:'−'}
+.lex-meta-items{display:flex;flex-wrap:wrap;gap:6px 20px;padding:11px 0 0}
+.lex-meta b{font-weight:650;color:var(--ink-soft)}
+.lex-core{margin-top:20px;padding-top:19px;border-top:1px solid var(--rule-soft)}
+.lex-core-zh{font-family:var(--sans);font-size:clamp(20px,2.2vw,24px);font-weight:500;line-height:1.55;letter-spacing:.04em}
+.lex-core-en{margin-top:8px;font-family:var(--serif);font-size:16px;color:var(--ink-soft);line-height:1.7}
+.lex-core-note{margin-top:13px;font-size:12px;color:var(--ink-soft);line-height:1.85;background:var(--paper-2);
+  border-left:2px solid #c6d4c3;padding:10px 13px;border-radius:0 3px 3px 0}
+.lex-core-note b{color:var(--ink)}
+.lex-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.lex-actions .is-saved{background:var(--accent-soft);color:var(--accent);border-color:#d5e1d2}
+.icon-btn{width:38px;height:38px;border:1px solid var(--rule);border-radius:10px;background:var(--paper);font-size:17px;color:var(--muted);
+  display:grid;place-items:center}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.icon-btn.saved{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+
+/* ===== 目录 ===== */
+.lex-toc{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:14px 0;margin-bottom:28px}
+.lex-quick-links{display:flex;align-items:baseline;gap:26px;flex-wrap:wrap}
+.lex-toc a{text-decoration:none;font-size:12px;color:var(--ink-soft);padding:3px 0}
+.lex-toc a:hover{color:var(--accent-dark)}
+.lex-toc-more{margin-left:auto;flex:1;text-align:right;min-width:95px}
+.lex-toc-more summary{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-size:11px;color:var(--muted);list-style:none}
+.lex-toc-more summary::-webkit-details-marker{display:none}
+.lex-toc-more[open] summary span{transform:rotate(45deg)}
+.lex-quick-links:has(.lex-toc-more[open]) .lex-toc-more{flex-basis:100%}
+.lex-toc-items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 20px;margin-top:16px;text-align:left;padding:14px 0 2px;border-top:1px solid var(--rule-soft)}
+.lex-toc-items a{display:flex;align-items:baseline;gap:10px;font-size:11px}
+.lex-toc-items a span{color:var(--muted);font:10px var(--mono)}
+@media(max-width:700px){.lex-toc-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.lex-quick-links{gap:20px}.lex-toc{margin-bottom:24px}.lex-head{padding-top:17px}.lex-toc-items{gap:9px 13px}}
+
+/* ===== 模块容器 ===== */
+.lex-sec{scroll-margin-top:calc(var(--topbar-h) + 16px);margin-bottom:34px}
+.lex-sec-h{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--rule);margin-bottom:18px}
+.lex-sec-no{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:400}
+.lex-sec-title{font-family:var(--sans);font-size:18px;font-weight:600;line-height:1.4}
+.lex-sec-sub{margin-left:auto;font-size:12px;color:var(--faint)}
+.lex-p{font-size:14px;line-height:1.95;color:var(--ink-soft);margin:0 0 .85em}
+.lex-p:last-child{margin-bottom:0}
+.lex-p strong{color:var(--ink)}
+.lex-muted{font-size:12px;color:var(--muted);line-height:1.8;margin:.7em 0 0}
+.lex-label{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin:16px 0 6px;text-transform:uppercase}
+.lex-label.neutral{color:var(--muted)}
+.lex-h3{font-family:var(--serif);font-size:17px;margin:26px 0 10px}
+.lex-divider{height:1px;background:var(--rule);margin:24px 0}
+.missing{font-size:12px;color:var(--muted);background:var(--paper-2);border-left:2px solid var(--rule);border-radius:0;padding:12px 14px;line-height:1.8}
+
+/* ===== 01 义项 ===== */
+.sense-block{padding:26px 0 30px;border-top:1px solid var(--rule)}
+.sense-block:first-of-type{border-top:0;padding-top:4px}
+.lex-sec-h + .sense-block{border-top:0;padding-top:4px}
+.sense-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.sense-no{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--ink-soft);background:var(--bg-2);border-radius:4px;
+  width:26px;height:26px;display:grid;place-items:center;flex:none}
+.sense-block.is-core .sense-no{background:var(--accent-soft);color:var(--accent-dark)}
+.sense-pos{font-family:var(--serif);font-size:14.5px;font-style:italic;color:var(--muted);letter-spacing:.02em}
+.sense-title-zh{font-family:var(--sans);font-size:20px;font-weight:500;line-height:1.5;margin:0 0 14px}
+.sense-def-en{font-family:var(--serif);font-size:clamp(19px,2.6vw,22px);line-height:1.62;color:#1b1f22;letter-spacing:.005em;
+  border-left:2px solid #a5bba0;padding:2px 0 2px 18px;margin:0}
+.sense-def-zh{margin:12px 0 0;padding-left:21px;font-size:15.5px;line-height:1.85;color:var(--ink);font-weight:600}
+.sense-def-zh .k{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-right:8px;vertical-align:2px}
+.sense-expl{margin:10px 0 0;padding-left:21px;font-size:14px;line-height:1.95;color:var(--ink-soft)}
+.sense-expl .k{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);margin-right:8px;vertical-align:2px}
+.sense-domain{margin-left:auto;font-size:10px;color:var(--muted);padding:2px 0}
+
+/* 例句 */
+.ex-block{margin:16px 0 0;padding-left:21px;border-left:1px solid var(--rule-soft)}
+.ex-meta{font-size:11px;letter-spacing:.06em;color:var(--faint);margin-bottom:5px}
+.ex-en{font-family:var(--serif);font-size:17px;line-height:1.62;color:var(--ink)}
+.ex-zh{font-size:14px;line-height:1.85;color:var(--ink-soft);margin-top:3px}
+.ex-analysis{margin-top:8px;font-size:13px;line-height:1.85;color:var(--ink-soft);background:var(--paper-2);
+  border:1px solid var(--rule-soft);border-radius:9px;padding:11px 14px}
+.ex-analysis ul{margin:0}
+.ex-analysis li{margin:3px 0}
+.gram-list{margin:12px 0 0;padding-left:21px;display:flex;flex-direction:column;gap:6px}
+.gram-list code{background:var(--bg-2);padding:.25em .6em;border-radius:5px;font-size:13px;display:inline-block}
+.cautious{margin-top:10px;padding-left:21px;font-size:13px;color:#7a5a12;background:var(--amber-soft);
+  border-radius:8px;padding:10px 14px;line-height:1.8}
+
+/* ===== 02 词形 / 03 家族 / 表格 ===== */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.form-cell{background:var(--paper-2);border:1px solid var(--rule-soft);border-radius:10px;padding:11px 13px}
+.form-cell span{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted)}
+.form-cell b{font-family:var(--serif);font-size:18px;font-weight:700}
+.form-cell b.irregular{color:var(--accent)}
+.family-list{display:flex;flex-direction:column;gap:0}
+.family-row{display:grid;grid-template-columns:1.1fr .6fr 1.4fr 1.6fr;gap:12px;align-items:baseline;
+  padding:12px 0;border-top:1px solid var(--rule-soft);font-size:13.5px}
+.family-row:first-child{border-top:0}
+.family-row .fw{font-family:var(--serif);font-size:17px;font-weight:700}
+.family-row .fw button{font:inherit;color:var(--accent-dark)}
+.family-row .fw button:hover{text-decoration:underline}
+.family-row .fw .self{color:var(--ink)}
+.family-row .fex{color:var(--ink-soft);font-style:italic}
+.family-row .fexz{color:var(--muted);font-size:12.5px}
+@media (max-width:720px){.family-row{grid-template-columns:1fr 1fr;gap:4px 12px}.family-row .fex{grid-column:1/-1}}
+
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.lex-tbl{width:100%;border-collapse:collapse;font-size:13.5px;min-width:480px}
+table.lex-tbl th{text-align:left;font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:700;
+  border-bottom:1.5px solid var(--rule);padding:8px 12px 8px 0;white-space:nowrap}
+table.lex-tbl td{padding:11px 12px 11px 0;border-bottom:1px solid var(--rule-soft);vertical-align:top;line-height:1.75}
+table.lex-tbl tr:last-child td{border-bottom:0}
+table.lex-tbl td:first-child{font-weight:650}
+table.lex-tbl .en{font-family:var(--serif);font-style:italic}
+
+/* ===== 04 词源 ===== */
+.etym-flow{display:flex;flex-direction:column;gap:6px;align-items:flex-start;margin:6px 0 18px}
+.etym-box{background:var(--paper-2);border:1px solid var(--rule);border-radius:10px;padding:12px 16px;max-width:100%}
+.etym-box strong{font-family:var(--serif);font-size:17px}
+.etym-box span{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+.etym-arrow{color:var(--faint);font-size:14px;padding-left:20px}
+.etym-split{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:14px 0}
+.etym-part{background:var(--paper-2);border:1px dashed var(--rule);border-radius:10px;padding:12px 14px}
+.etym-part span{font-size:11px;letter-spacing:.08em;color:var(--muted);display:block}
+.etym-part b{font-family:var(--serif);font-size:19px}
+.etym-part em{font-style:normal;font-size:12.5px;color:var(--ink-soft);display:block;margin-top:4px}
+
+/* ===== 05 形近 / 音近 / 易混 ===== */
+.rel-group{margin-bottom:30px}
+.rel-group:last-child{margin-bottom:0}
+.rel-group-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.rel-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.rel-card{border:1px solid var(--rule);border-radius:12px;padding:16px 18px;background:var(--paper-2)}
+.rel-card.target{border-color:var(--accent);background:var(--accent-soft)}
+.rel-card h4{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.2;margin:8px 0 4px}
+.rel-card h4 button{font:inherit;color:var(--accent-dark)}
+.rel-card h4 button:hover{text-decoration:underline}
+.rel-card .ipa{font-family:var(--serif);font-size:14px;color:var(--muted)}
+.rel-card .zh{font-size:14.5px;font-weight:650;margin:8px 0 4px}
+.rel-card .ex{font-family:var(--serif);font-style:italic;font-size:14.5px;line-height:1.6}
+.rel-card .exz{font-size:12.5px;color:var(--muted)}
+.diff-box{margin-top:14px;background:var(--paper-2);border:1px solid var(--rule-soft);border-radius:10px;padding:14px 16px}
+.diff-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:7px 0;border-top:1px dashed var(--rule-soft)}
+.diff-row:first-child{border-top:0}
+.diff-row .who{font-size:11.5px;color:var(--muted);width:60px;flex:none}
+.letters{display:flex;gap:3px;flex-wrap:wrap}
+.letter{width:26px;height:32px;display:grid;place-items:center;font-family:var(--serif);font-size:19px;
+  border:1px solid var(--rule);border-radius:5px;background:#fff;color:var(--ink)}
+.letter.diff-a{background:#e8f0ea;border-color:#a9c4b4;color:#2f5340;font-weight:700}
+.letter.diff-b{background:var(--accent-soft);border-color:#ddb4a5;color:var(--accent-dark);font-weight:700}
+.letter.ins{background:var(--blue-soft);border-color:#c3d0e0;color:#3c4c63;font-weight:700}
+.letter.gap{border-style:dashed;color:var(--faint)}
+@media (max-width:600px){.letter{width:23px;height:29px;font-size:17px}}
+.diff-note{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.75}
+
+/* ===== 06 近义词 ===== */
+.syn-entry{padding:14px 0;border-top:1px solid var(--rule-soft)}
+.syn-entry:first-of-type{border-top:0}
+.syn-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.syn-word{font-family:var(--serif);font-size:19px;font-weight:700}
+.syn-word button{font:inherit;color:var(--accent-dark)}
+.syn-focus{margin-top:6px;font-size:13.5px;line-height:1.85;color:var(--ink-soft)}
+.syn-ex{margin-top:6px;font-family:var(--serif);font-style:italic;font-size:14.5px}
+.syn-exz{font-size:13px;color:var(--muted)}
+
+/* ===== 07 搭配 ===== */
+.coll-list{columns:2;column-gap:26px}
+@media (max-width:720px){.coll-list{columns:1}}
+.coll-item{break-inside:avoid;padding:9px 0;border-bottom:1px solid var(--rule-soft)}
+.coll-phrase{font-family:var(--serif);font-size:16px;font-weight:650}
+.coll-phrase button{font:inherit;color:inherit}
+.coll-zh{font-size:13px;color:var(--ink-soft);margin-top:2px}
+.coll-ex{margin-top:4px;font-size:12.5px;color:var(--muted);font-family:var(--serif);font-style:italic}
+
+/* ===== 08 错误 ===== */
+.err-item{padding:14px 0;border-top:1px solid var(--rule-soft)}
+.err-item:first-child{border-top:0}
+.err-line{display:flex;gap:8px;font-family:var(--serif);font-size:15.5px;line-height:1.6}
+.err-line.wrong{color:#9a3a26}
+.err-line.right{color:#2f5340}
+.err-line .mk{flex:none;font-weight:700}
+.err-why{margin-top:6px;font-size:13px;line-height:1.85;color:var(--ink-soft)}
+.err-rule{margin-top:4px;font-size:12.5px;color:var(--muted);line-height:1.8}
+
+/* ===== 09 语境 ===== */
+.ctx-tag{display:inline-block;font-size:11.5px;letter-spacing:.06em;color:var(--accent-dark);background:var(--accent-soft);
+  border-radius:20px;padding:2px 11px;margin-bottom:8px}
+
+/* ===== 11 记忆系统 ===== */
+.ms-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--rule-soft)}
+.ms-row:first-of-type{border-top:0}
+.ms-text{flex:1;min-width:0}
+.ms-text b{font-family:var(--serif);font-size:16px}
+.ms-text small{display:block;font-family:var(--serif);font-style:italic;color:var(--muted);font-size:12.5px}
+.ms-states{display:flex;gap:6px;flex:none}
+.ms-state{font-size:12.5px;padding:5px 12px;border-radius:20px;border:1px solid var(--rule);background:var(--paper);color:var(--muted);white-space:nowrap}
+.ms-state:hover{border-color:var(--accent);color:var(--accent-dark)}
+.ms-state.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.ms-state.on[data-status="learning"]{background:var(--amber);border-color:var(--amber);color:#fff}
+.ms-state.on[data-status="mastered"]{background:var(--green);border-color:var(--green);color:#fff}
+.ms-bar{height:7px;background:var(--bg-2);border-radius:7px;overflow:hidden;margin:14px 0 6px;display:flex}
+.ms-bar i{display:block;height:100%}
+.ms-bar i.m{background:var(--green)}
+.ms-bar i.l{background:var(--amber)}
+.note-area{width:100%;min-height:110px;border:1px solid var(--rule);border-radius:10px;padding:12px 14px;background:var(--paper-2);
+  font-size:13.5px;line-height:1.8;resize:vertical;outline:none}
+.note-area:focus{border-color:var(--accent)}
+.ms-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+
+/* ===== 12 测试 ===== */
+.quiz-item{padding:16px 0;border-top:1px solid var(--rule-soft)}
+.quiz-item:first-child{border-top:0}
+.quiz-q{font-family:var(--serif);font-size:16.5px;line-height:1.65;margin-bottom:10px}
+.quiz-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.quiz-opt{display:flex;align-items:center;gap:8px;border:1px solid var(--rule);border-radius:9px;padding:9px 13px;
+  background:var(--paper);font-family:var(--serif);font-size:15px}
+.quiz-opt:hover{border-color:var(--accent)}
+.quiz-opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.quiz-opt.ok{border-color:var(--green);background:var(--green-soft);color:#2f5340}
+.quiz-opt.bad{border-color:#d9a396;background:#fbeeea;color:#9a3a26}
+.quiz-opt input{accent-color:var(--accent)}
+.quiz-fb{margin-top:10px;font-size:13px;line-height:1.8;background:var(--paper-2);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 8px 8px 0}
+.quiz-fb.wrong{border-left-color:var(--accent)}
+.quiz-fb b{display:block;margin-bottom:2px}
+.quiz-score{text-align:center;padding:20px 0}
+.quiz-score strong{font-family:var(--serif);font-size:38px;display:block;line-height:1.2}
+.quiz-score p{color:var(--ink-soft);font-size:13.5px}
+
+/* ===== 13 来源 ===== */
+.src-item{padding:11px 0;border-top:1px solid var(--rule-soft);font-size:13px;line-height:1.8}
+.src-item:first-child{border-top:0}
+.src-item a{font-weight:650}
+.src-meta{color:var(--muted);font-size:12px}
+
+/* ===== 在线兜底词条 ===== */
+.online-flag{background:var(--blue-soft);border:1px solid #dbe3ee;border-radius:10px;padding:12px 15px;font-size:12.5px;color:#3c4c63;margin-bottom:20px}
+
+/* ===== 通用小件 ===== */
+.wl{font:inherit;color:var(--accent-dark);cursor:pointer;border-bottom:1px solid transparent}
+.wl:hover{border-bottom-color:var(--accent-dark)}
+.wl.dead{color:var(--muted);cursor:help}
+.wl em{font-style:normal;font-size:11px;color:var(--faint);border-bottom:0}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sub{color:var(--muted);font-size:13px}
+
+/* 次级模块保持同一套简洁的组件尺度。 */
+.lex-h3{font-family:var(--sans);font-size:16px;font-weight:600}
+.form-cell,.etym-box,.etym-part,.rel-card,.diff-box,.ex-analysis,.cautious,.quiz-opt,.note-area,.online-flag{border-radius:4px}
+.rel-card{background:var(--paper-2);padding:16px}
+.rel-card.target{border-color:#b2c5ac}
+.form-cell{padding:12px 13px}
+.etym-part{border-style:solid}
+.sense-def-zh{font-size:14px;font-weight:500}
+.sense-expl,.ex-zh{font-size:13px}
+.ex-analysis{font-size:12px}
+.ms-row{flex-wrap:wrap}
+.ms-states{flex-wrap:wrap}
+.ms-state{border-radius:4px;font-size:11px;padding:6px 9px}
+.quiz-opt{padding:10px 13px}
+.quiz-fb{border-radius:0 4px 4px 0}
+.ctx-tag{border-radius:3px;font-size:10px}
+@media(max-width:560px){
+  .lex-headword{font-size:54px}.lex-core-zh{font-size:21px}.lex-core-en{font-size:15px}
+  .lex-actions{gap:6px}.lex-actions .btn{font-size:11px;padding:8px 10px}.lex-pron{gap:8px 18px}
+  .lex-sec-title{font-size:17px}.sense-title-zh{font-size:19px}.sense-top{gap:9px}.sense-pos{font-size:13px}
+  .sense-def-en{font-size:20px;padding-left:14px}.sense-def-zh,.sense-expl{padding-left:16px}
+  .ex-block{padding-left:16px}.ms-text{flex-basis:100%}.ms-states{width:100%}.ms-state{flex:1}
+}
